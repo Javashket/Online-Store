@@ -14,7 +14,7 @@
 		<maven.compiler.source>10</maven.compiler.source>
 		<maven.compiler.target>10</maven.compiler.target>
 
-		<tomcat.version>8.5.37</tomcat.version>
+		<tomcat.version>9.0.31</tomcat.version>
 		<hibernate.version>5.4.2.Final</hibernate.version>
 	</properties>
 
