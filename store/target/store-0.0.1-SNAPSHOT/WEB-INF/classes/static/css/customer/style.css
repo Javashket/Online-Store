@@ -1,0 +1,54 @@
+header .navbar {
+    height: 80px;
+}
+
+.customer_info {
+    width: 100%;
+    height: 40px;
+    background: #c6c5c5;
+    display: flex;
+}
+
+.status {
+    float: left;
+    font-size: 20px;
+    margin: auto;
+    padding-top: 10px;
+}
+
+.balance {
+    float: right;
+    font-size: 20px;
+    margin: auto;
+    padding-top: 10px;
+}
+
+.sidebar-filter {
+    background: #ecebeb;
+    height: 480px;
+}
+
+.search_button {
+    width: 200px;
+}
+
+footer {
+    height: 80px;
+}
+.titles {
+
+    position: absolute;
+    margin-top: 250px;
+    margin-left: 350px;
+}
+.titles2{
+    position: absolute;
+    margin-top: 250px;
+    margin-left: 350px;
+}
+.reginfo {
+    font-size: 35px;
+}
+.main_content {
+    margin-bottom: 81px;
+}
