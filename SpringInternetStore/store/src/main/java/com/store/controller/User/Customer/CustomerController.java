@@ -5,7 +5,6 @@ import com.store.model.User;
 import com.store.service.ListDesireService;
 import com.store.service.OrderService;
 import com.store.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -24,29 +23,32 @@ import java.util.Set;
 @PreAuthorize("hasAuthority('CUSTOMER')")
 public class CustomerController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private ListDesireService listDesireService;
+    private final ListDesireService listDesireService;
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+
+    public CustomerController(ProductService productService, ListDesireService listDesireService, OrderService orderService) {
+        this.productService = productService;
+        this.listDesireService = listDesireService;
+        this.orderService = orderService;
+    }
 
     @GetMapping("/customer")
     public String getProductsIndexCustomer(@RequestParam(required = false) String gender,
                                            @RequestParam(required = false) String season,
                                            @RequestParam(required = false) String type, Model model,
-                                          @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+                                           @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("login", user.getLogin());
-        model.addAttribute("balance", user.getBalance() != null ? user.getBalance(): "0");
-        if(gender != null && season != null && type != null) {
-            model.addAttribute("products", productService.getProductsByCategories(type,season,gender,pageable));
+        model.addAttribute("balance", user.getBalance() != null ? user.getBalance() : "0");
+        if (gender != null && season != null && type != null) {
+            model.addAttribute("products", productService.getProductsByCategories(type, season, gender, pageable));
             model.addAttribute("url", "/customer?gender=" + gender + "&season=" + season + "&type=" + type + "&");
         } else {
-            model.addAttribute("notCategory",true);
+            model.addAttribute("notCategory", true);
             model.addAttribute("url", "/customer");
         }
         model.addAttribute("gender", gender);
@@ -57,13 +59,13 @@ public class CustomerController {
 
     @GetMapping("/search")
     public String searchByDescriptionOrName(@RequestParam(required = false) String text,
-                                            @RequestParam(required = false) String search,Model model,
+                                            @RequestParam(required = false) String search, Model model,
                                             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("login", user.getLogin());
-        model.addAttribute("balance", user.getBalance() != null ? user.getBalance(): "0");
-        if(search != null && text != null && !text.equals("")) {
+        model.addAttribute("balance", user.getBalance() != null ? user.getBalance() : "0");
+        if (search != null && text != null && !text.equals("")) {
             model.addAttribute("products", productService.findByNameOrDescription(text, search, pageable));
             model.addAttribute("url", "/search?search=" + search + "&text=" + text + "&");
             model.addAttribute("search", search);
@@ -79,7 +81,7 @@ public class CustomerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("login", user.getLogin());
-        model.addAttribute("balance", user.getBalance() != null ? user.getBalance(): "0");
+        model.addAttribute("balance", user.getBalance() != null ? user.getBalance() : "0");
         model2.put("product", productService.findById(Integer.parseInt(code)));
         return "/customer/product_customer";
     }
@@ -89,7 +91,7 @@ public class CustomerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("login", user.getLogin());
-        model.addAttribute("balance", user.getBalance() != null ? user.getBalance(): "0");
+        model.addAttribute("balance", user.getBalance() != null ? user.getBalance() : "0");
         model.addAttribute("orderlists", orderService.getOrdersById(user));
         return "/customer/order_history";
     }
@@ -99,9 +101,9 @@ public class CustomerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("login", user.getLogin());
-        model.addAttribute("balance", user.getBalance() != null ? user.getBalance(): "0");
+        model.addAttribute("balance", user.getBalance() != null ? user.getBalance() : "0");
         Set<Product> listDesires = listDesireService.findById(user.getListDesires().getId()).getProducts();
-        if(!listDesires.isEmpty()) {
+        if (!listDesires.isEmpty()) {
             model.addAttribute("products", listDesires);
         }
         return "/customer/favorites";

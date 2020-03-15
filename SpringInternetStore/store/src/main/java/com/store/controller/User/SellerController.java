@@ -3,7 +3,6 @@ package com.store.controller.User;
 import com.store.model.Product;
 import com.store.model.User;
 import com.store.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -20,8 +19,11 @@ import java.util.Map;
 @PreAuthorize("hasAuthority('SELLER')")
 public class SellerController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public SellerController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/seller")
     public String getProductsIndexCustomer(@RequestParam(required = false) String gender,
@@ -31,11 +33,11 @@ public class SellerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("login", user.getLogin());
-        if(gender != null && season != null && type != null) {
-            model.addAttribute("products", productService.getProductsByCategories(type,season,gender,pageable));
+        if (gender != null && season != null && type != null) {
+            model.addAttribute("products", productService.getProductsByCategories(type, season, gender, pageable));
             model.addAttribute("url", "/seller?gender=" + gender + "&season=" + season + "&type=" + type + "&");
         } else {
-            model.addAttribute("notCategory",true);
+            model.addAttribute("notCategory", true);
             model.addAttribute("url", "/seller");
         }
         model.addAttribute("gender", gender);
@@ -48,29 +50,29 @@ public class SellerController {
     public String getPageAddProduct(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         return "/seller/product_add";
     }
 
     @PostMapping("/product_add")
     public String addProduct(@RequestParam String season, @RequestParam String type,
-                             @RequestParam String gender,@RequestParam String description,
+                             @RequestParam String gender, @RequestParam String description,
                              @RequestParam String name, @RequestParam String price,
                              @RequestParam String count, Model model) {
-        Product product = new Product( name, price, count, description, type, season, gender);
+        Product product = new Product(name, price, count, description, type, season, gender);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         productService.addProduct(product);
-        model.addAttribute("succesAddProduct",true);
+        model.addAttribute("succesAddProduct", true);
         return "/seller/seller";
     }
 
     @GetMapping("/edit_product{code}")
-    public String getPageEditProduct(Model model,@PathVariable String code) {
+    public String getPageEditProduct(Model model, @PathVariable String code) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         model.addAttribute("code", code);
         model.addAttribute("product", productService.findById(Integer.parseInt(code)));
         return "/seller/product_edit";
@@ -78,14 +80,14 @@ public class SellerController {
 
     @PostMapping("/edit_product{code}")
     public String editProduct(@RequestParam String season, @RequestParam String type,
-                             @RequestParam String gender,@RequestParam String description,
-                             @RequestParam String name, @RequestParam String price,
-                             @RequestParam String count, Model model,
+                              @RequestParam String gender, @RequestParam String description,
+                              @RequestParam String name, @RequestParam String price,
+                              @RequestParam String count, Model model,
                               @PathVariable String code) {
-        productService.editProduct(Integer.parseInt(code),name, price, count, description, season, type, gender);
+        productService.editProduct(Integer.parseInt(code), name, price, count, description, season, type, gender);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         return "redirect:/seller";
     }
 
@@ -107,12 +109,12 @@ public class SellerController {
 
     @GetMapping("/search_for_seller")
     public String searchByDescriptionOrName(@RequestParam(required = false) String text,
-                                            @RequestParam(required = false) String search,Model model,
+                                            @RequestParam(required = false) String search, Model model,
                                             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         model.addAttribute("login", user.getLogin());
-        if(search != null && text != null && !text.equals("")) {
+        if (search != null && text != null && !text.equals("")) {
             model.addAttribute("products", productService.findByNameOrDescription(text, search, pageable));
             model.addAttribute("url", "/search_for_seller?search=" + search + "&text=" + text + "&");
             model.addAttribute("search", search);

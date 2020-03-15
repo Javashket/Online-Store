@@ -3,7 +3,6 @@ package com.store.controller.User;
 import com.store.model.User;
 import com.store.service.OrderService;
 import com.store.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,17 +19,20 @@ import java.util.Map;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public AdminController(OrderService orderService, UserService userService) {
+        this.orderService = orderService;
+        this.userService = userService;
+    }
 
     @GetMapping("/admin")
     public String getIndexAdmin(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         return "/admin/admin";
     }
 
@@ -38,28 +40,28 @@ public class AdminController {
     public String getOrderList(Model model, Map<String, Object> model2) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         model2.put("orders", orderService.getAllOrders());
         return "/admin/order_list";
     }
 
     @GetMapping("/user_list")
-    public String getUserList(Model model,Map<String, Object> model2) {
+    public String getUserList(Model model, Map<String, Object> model2) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         model2.put("users", userService.getAllUsers());
         return "/admin/user_list";
     }
 
     @GetMapping("/delete_user{code}")
-    public String deleteUser(Model model,  @PathVariable String code,
+    public String deleteUser(Model model, @PathVariable String code,
                              Map<String, Object> model2) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
-        boolean answer =  userService.deleteUserById(Integer.parseInt(code));
-        if(!answer) {
+        model.addAttribute("login", user.getLogin());
+        boolean answer = userService.deleteUserById(Integer.parseInt(code));
+        if (!answer) {
             model.addAttribute("no_such_user", answer);
         }
         model2.put("users", userService.getAllUsers());
@@ -67,29 +69,29 @@ public class AdminController {
     }
 
     @GetMapping("/edit_user{code}")
-    public String getEditUserPage(Model model,  @PathVariable String code,
-                             Map<String, Object> model2) {
+    public String getEditUserPage(Model model, @PathVariable String code,
+                                  Map<String, Object> model2) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         model.addAttribute("code", code);
-        model.addAttribute("role",userService.getUserById(Integer.parseInt(code)).getRole());
+        model.addAttribute("role", userService.getUserById(Integer.parseInt(code)).getRole());
         return "/admin/edit_user";
     }
 
     @PostMapping("/edit_user{code}")
-    public String EditUser(Model model,  @PathVariable String code,
+    public String EditUser(Model model, @PathVariable String code,
                            @RequestParam String login, @RequestParam String password,
                            @RequestParam(required = false) String balance,
                            Map<String, Object> model2) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
-        model.addAttribute("login",user.getLogin());
+        model.addAttribute("login", user.getLogin());
         model2.put("users", userService.getAllUsers());
-        if(balance == null) {
-            userService.editUserPasswordAndLogin(userService.getUserById(Integer.parseInt(code)),password,login);
+        if (balance == null) {
+            userService.editUserPasswordAndLogin(userService.getUserById(Integer.parseInt(code)), password, login);
         } else {
-            userService.editUserPasswordAndLoginAndBalance(userService.getUserById(Integer.parseInt(code)),password,login,Integer.parseInt(balance));
+            userService.editUserPasswordAndLoginAndBalance(userService.getUserById(Integer.parseInt(code)), password, login, Integer.parseInt(balance));
         }
         return "/admin/user_list";
     }

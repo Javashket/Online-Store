@@ -17,7 +17,7 @@ public class ProductInBasket {
         this.productName = product.getName();
         this.productPrice = product.getPrice();
         this.count = count;
-        this.productTotalPrice = this.count * this.productPrice ;
+        this.productTotalPrice = this.count * this.productPrice;
     }
 
     @Id
@@ -95,14 +95,14 @@ public class ProductInBasket {
     }
 
     public void increment() {
-        if ( count < 99999) {
+        if (count < 99999) {
             this.count++;
             this.productTotalPrice += this.productPrice;
         }
     }
 
     public void decrement() {
-        if ( count > 1) {
+        if (count > 1) {
             this.count--;
             this.productTotalPrice -= this.productPrice;
         }

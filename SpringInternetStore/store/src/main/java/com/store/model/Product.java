@@ -1,6 +1,9 @@
 package com.store.model;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.HashSet;
@@ -10,51 +13,66 @@ import java.util.Set;
 @Entity
 public class Product {
 
-    public Product(){
+    public Product() {
 
     }
 
     public Product(String name, String price, String count,
                    String description, String type,
-                   String season, String gender){
-     this.name = name;
-     this.price = Integer.parseInt(price);
-     this.count = Integer.parseInt(count);
-     this.description = description;
-     this.season = season;
-     this.type = type;
-     this.gender = gender;
+                   String season, String gender) {
+        this.name = name;
+        this.price = Integer.parseInt(price);
+        this.count = Integer.parseInt(count);
+        this.description = description;
+        this.season = season;
+        this.type = type;
+        this.gender = gender;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Integer id;
 
-    @Size( min = 3, max = 20)
+    @Size(min = 3, max = 20)
     @NotBlank
+    @Getter
+    @Setter
     private String name;
 
     @Size(max = 200)
     @NotBlank
+    @Getter
+    @Setter
     private String description;
 
     @Max(999999999)
     @Min(0)
     @NotNull
+    @Getter
+    @Setter
     private Integer price;
 
     @Max(999999999)
     @Min(0)
     @NotNull
+    @Getter
+    @Setter
     private Integer count;
 
     @NotBlank
+    @Getter
+    @Setter
     private String gender;
 
     @NotBlank
+    @Getter
+    @Setter
     private String season;
 
     @NotBlank
+    @Getter
+    @Setter
     private String type;
 
     @ManyToMany(mappedBy = "products")
@@ -66,66 +84,6 @@ public class Product {
 
     public void addListDesires(ListDesires listDesires) {
         this.listDesires.add(listDesires);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setSeason(String season) {
-        this.season = season;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getSeason() {
-        return season;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public void removeListDesire(ListDesires listDesires) {

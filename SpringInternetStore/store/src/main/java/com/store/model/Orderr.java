@@ -1,48 +1,35 @@
 package com.store.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@EqualsAndHashCode
 public class Orderr {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
+    @Setter
+    @Getter
     private User user;
 
-    @OneToMany( mappedBy = "orderr")
+    @OneToMany(mappedBy = "orderr")
+    @Getter
     private List<ProductInOrder> products = new ArrayList<>();
 
+    @Getter
+    @Setter
     private Integer summ;
-
-    public Integer getSumm() {
-        return summ;
-    }
-
-    public void setSumm(Integer summ) {
-        this.summ = summ;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List <ProductInOrder> getProducts() {
-        return products;
-    }
 
     public void addProduct(ProductInOrder product) {
         this.products.add(product);

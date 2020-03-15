@@ -2,7 +2,6 @@ package com.store.controller;
 
 import com.store.model.User;
 import com.store.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,12 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Objects;
 
 @Controller
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping("/index")
     public String index() {
@@ -31,34 +34,34 @@ public class AuthController {
     }
 
     @PostMapping("/recovery")
-    public String sendRecoveryOnEmail(@RequestParam String email, Model model){
-        if(!userService.recoveryUser(email)) {
-            model.addAttribute("notFoundEmail",true);
+    public String sendRecoveryOnEmail(@RequestParam String email, Model model) {
+        if (!userService.recoveryUser(email)) {
+            model.addAttribute("notFoundEmail", true);
             return "/auth/recovery";
         } else {
-            model.addAttribute("successRegistration",true);
+            model.addAttribute("successRegistration", true);
             return "/auth/login";
         }
     }
 
     @GetMapping("/recovery_pass/{code}")
-    public String NewPassword (@PathVariable String code ,Model model) {
-        model.addAttribute("code",code);
+    public String NewPassword(@PathVariable String code, Model model) {
+        model.addAttribute("code", code);
         return "/auth/recovery_pass";
     }
 
     @PostMapping("/recovery_pass/{code}")
-    public String enterNewPassword (Model model, @PathVariable String code,
-                                    @RequestParam  String password) {
+    public String enterNewPassword(Model model, @PathVariable String code,
+                                   @RequestParam String password) {
         if (password.length() < 6 || password.length() > 15) {
             model.addAttribute("passwordError", "Пароль должен быть от 6 до 15 символов");
-            model.addAttribute("code",code);
+            model.addAttribute("code", code);
             return "/auth/recovery_pass";
         }
         User user = userService.searchByActivationCode(code);
-        userService.editUserPassword(user,password);
+        userService.editUserPassword(user, password);
         userService.activateUser(code);
-        model.addAttribute("editPassword",true);
+        model.addAttribute("editPassword", true);
         return "/auth/login";
     }
 
@@ -76,24 +79,24 @@ public class AuthController {
             populateError("email", model, bindingResult);
             return "/auth/registration";
         }
-        if(!user.getPassword().equals(confirm_password)){
+        if (!user.getPassword().equals(confirm_password)) {
             model.addAttribute("errorEqualsPassword", true);
             return "/auth/registration";
         }
-       if (!userService.addUser(user)) {
-           model.addAttribute("errorDublicateMail", true);
-                   return "/auth/registration";
-       }else {
-           model.addAttribute("successRegistration", true);
-       }
-       return "/auth/login";
+        if (!userService.addUser(user)) {
+            model.addAttribute("errorDublicateMail", true);
+            return "/auth/registration";
+        } else {
+            model.addAttribute("successRegistration", true);
+        }
+        return "/auth/login";
     }
 
     @GetMapping("/activate/{code}")
-    public String activate (Model model, @PathVariable String code) {
+    public String activate(Model model, @PathVariable String code) {
         boolean isActivated = userService.activateUser(code);
-        if(isActivated) {
-            model.addAttribute("success",true);
+        if (isActivated) {
+            model.addAttribute("success", true);
         } else {
             model.addAttribute("errorCode", true);
         }
@@ -101,10 +104,10 @@ public class AuthController {
     }
 
     @RequestMapping("/login")
-    public String login(@RequestParam(name = "error", required = false)Boolean error,
+    public String login(@RequestParam(name = "error", required = false) Boolean error,
                         Model model) {
-        if(Boolean.TRUE.equals(error)){
-            model.addAttribute("error",true);
+        if (Boolean.TRUE.equals(error)) {
+            model.addAttribute("error", true);
         }
         return "/auth/login";
     }
@@ -129,14 +132,14 @@ public class AuthController {
                 return "redirect:/customer";
             }
             return "redirect:/seller";
-        } else  {
+        } else {
             return "redirect:/notactivate";
         }
     }
 
-    private void populateError (String field, Model model, BindingResult bindingResult) {
+    private void populateError(String field, Model model, BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors(field)) {
-            model.addAttribute(field + "Error", bindingResult.getFieldError(field)
+            model.addAttribute(field + "Error", Objects.requireNonNull(bindingResult.getFieldError(field))
                     .getDefaultMessage());
         }
     }
