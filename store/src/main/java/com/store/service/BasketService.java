@@ -2,46 +2,41 @@ package com.store.service;
 
 import com.store.model.*;
 import com.store.repos.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-
+@Value
+@AllArgsConstructor
 public class BasketService {
 
-    @Autowired
-    private ProductService productService;
+    ProductService productService;
 
-    @Autowired
-    private BasketRepo basketRepo;
+    BasketRepo basketRepo;
 
-    @Autowired
-    private ProductInBasketRepo productInBasketRepo;
+    ProductInBasketRepo productInBasketRepo;
 
-    @Autowired
-    private OrderrRepo orderrRepo;
+    OrderrRepo orderrRepo;
 
-    @Autowired
-    private ProductInOrderRepo productInOrderRepo;
+    ProductInOrderRepo productInOrderRepo;
 
-    @Autowired
-    private UserRepo userRepo;
+    UserRepo userRepo;
 
     public void addProduct(User user, Integer productId) {
         Integer basketId = user.getBasket().getId();
-        List <ProductInBasket> productInBaskets = productInBasketRepo.findByBasket_Id(basketId);
+        List<ProductInBasket> productInBaskets = productInBasketRepo.findByBasket_Id(basketId);
         boolean contain_result = true;
-        for( ProductInBasket p : productInBaskets) {
+        for (ProductInBasket p : productInBaskets) {
             if (p.getProductId().equals(productId)) {
                 contain_result = false;
-                System.out.println("true");
+                break;
             }
         }
-        if(contain_result) {
-            System.out.println("true");
+        if (contain_result) {
             Product product = productService.findById(productId);
             Basket basket = basketRepo.findById(user.getBasket().getId());
             ProductInBasket productInBasket = new ProductInBasket(product, 1);
@@ -52,7 +47,7 @@ public class BasketService {
         }
     }
 
-    public void deleteProduct( Integer basketId, Integer id) {
+    public void deleteProduct(Integer basketId, Integer id) {
         ProductInBasket productInBasket = productInBasketRepo.findById(id);
         productInBasketRepo.removeById(id);
         Basket basket = basketRepo.findById(basketId);
@@ -64,7 +59,7 @@ public class BasketService {
         ProductInBasket productInBasket = productInBasketRepo.findById(id);
         productInBasket.increment();
         productInBasketRepo.save(productInBasket);
-       return productInBasket.getCount();
+        return productInBasket.getCount();
     }
 
     public Basket findBasketById(Integer id) {
@@ -84,7 +79,7 @@ public class BasketService {
 
     public Integer getTotalBasketSum(Integer id) {
         Integer summ = 0;
-        for(ProductInBasket p : productInBasketRepo.findByBasket_Id(id)) {
+        for (ProductInBasket p : productInBasketRepo.findByBasket_Id(id)) {
             summ += p.getProductTotalPrice();
         }
         return summ;
@@ -94,19 +89,19 @@ public class BasketService {
         List<String> model = new ArrayList<>();
         Integer balance = user.getBalance();
         Integer totalInBasket = getTotalBasketSum(user.getBasket().getId());
-        if( balance < totalInBasket) {
+        if (balance < totalInBasket) {
             model.add("На счету недостаточно средств");
         }
         for (ProductInBasket p : productInBasketRepo.findByBasket_Id(user.getBasket().getId())) {
             Integer productId = p.getProductId();
-            if ( productService.findById(productId).getCount() <= p.getCount()) {
-                       model.add("товар № " + p.getProductId() + " недостаточное кол-во на складе");
+            if (productService.findById(productId).getCount() <= p.getCount()) {
+                model.add("товар № " + p.getProductId() + " недостаточное кол-во на складе");
             }
         }
         return model;
     }
 
-    public void pay (User user) {
+    public void pay(User user) {
         Orderr orderr = new Orderr();
         orderr.setUser(user);
         Integer balance = user.getBalance();
@@ -116,7 +111,7 @@ public class BasketService {
         orderr.setSumm(getTotalBasketSum(user.getBasket().getId()));
         orderrRepo.save(orderr);
         userRepo.save(user);
-        for(ProductInBasket p : productInBasketRepo.findByBasket_Id(user.getBasket().getId())) {
+        for (ProductInBasket p : productInBasketRepo.findByBasket_Id(user.getBasket().getId())) {
             ProductInOrder productInOrder = new ProductInOrder(
                     orderr, p.getProductName(), p.getProductTotalPrice(), p.getCount()
             );

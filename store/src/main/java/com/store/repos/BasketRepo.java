@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface BasketRepo extends CrudRepository<Basket, Long> {
 
-    Basket findById (Integer id);
+    Basket findById(Integer id);
 
-    void deleteById( Integer id);
+    void deleteById(Integer id);
 }

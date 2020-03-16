@@ -50,7 +50,7 @@ public class BasketController {
 
     @PostMapping("/delete_product_position_basket{code}")
     @ResponseBody
-    public String deleteProductPositionInBasket(@PathVariable String code, Model model) {
+    public String deleteProductPositionInBasket(@PathVariable String code) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         basketService.deleteProduct(user.getBasket().getId(), Integer.parseInt(code));
@@ -97,14 +97,13 @@ public class BasketController {
             if (!productInBasket.isEmpty()) {
                 model2.put("products", productInBasket);
             }
-            return "/customer/basket";
         } else {
             basketService.pay(user);
             model.addAttribute("login", user.getLogin());
             model.addAttribute("balance", user.getBalance() != null ? user.getBalance() : "0");
             model.addAttribute("sum", basketService.getTotalBasketSum(user.getBasket().getId()));
             model.addAttribute("succesPay", "Заказ успешно совершен");
-            return "/customer/basket";
         }
+        return "/customer/basket";
     }
 }

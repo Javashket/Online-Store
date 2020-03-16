@@ -7,9 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface ProductInOrderRepo extends CrudRepository <ProductInOrder,Long> {
+public interface ProductInOrderRepo extends CrudRepository<ProductInOrder, Long> {
 
     ProductInOrder findById(Integer id);
 
-    void removeById(Integer productId);
 }

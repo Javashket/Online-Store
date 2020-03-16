@@ -2,7 +2,8 @@ package com.store.security;
 
 import com.store.model.User;
 import com.store.repos.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Value
+@AllArgsConstructor
 public class AuthProviderImpl implements AuthenticationProvider {
 
-    @Autowired
-    private UserRepo userRepo;
+    UserRepo userRepo;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

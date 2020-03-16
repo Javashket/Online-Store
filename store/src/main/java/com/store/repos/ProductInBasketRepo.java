@@ -9,17 +9,17 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface ProductInBasketRepo extends CrudRepository <ProductInBasket,Long> {
+public interface ProductInBasketRepo extends CrudRepository<ProductInBasket, Long> {
 
-    ProductInBasket findById ( Integer id);
+    ProductInBasket findById(Integer id);
 
-    List <ProductInBasket> findByBasket_Id( Integer id);
+    List<ProductInBasket> findByBasket_Id(Integer id);
 
-    List <ProductInBasket> findByProductId ( Integer id);
+    List<ProductInBasket> findByProductId(Integer id);
 
-    void deleteByProductId (Integer id);
+    void deleteByProductId(Integer id);
 
     void removeById(Integer productId);
 
-    void deleteByBasket_Id( Integer id);
+    void deleteByBasket_Id(Integer id);
 }

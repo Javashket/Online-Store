@@ -16,11 +16,14 @@ import java.util.List;
 @Transactional
 public class ProductService {
 
-    @Autowired
-    private ProductRepo productRepo;
+    private final ProductRepo productRepo;
 
-    @Autowired
-    private ProductInBasketRepo productInBasketRepo;
+    private final ProductInBasketRepo productInBasketRepo;
+
+    public ProductService(ProductRepo productRepo, ProductInBasketRepo productInBasketRepo) {
+        this.productRepo = productRepo;
+        this.productInBasketRepo = productInBasketRepo;
+    }
 
     public Page<Product> getProductsByCategories(String type, String season,
                                                  String gender, Pageable pageable) {

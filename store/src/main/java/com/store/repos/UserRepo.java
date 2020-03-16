@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface UserRepo extends CrudRepository <User, Long> {
+public interface UserRepo extends CrudRepository<User, Long> {
 
     User findByEmail(String email);
 
@@ -20,8 +20,6 @@ public interface UserRepo extends CrudRepository <User, Long> {
     User findByActivationCode(String code);
 
     List<User> getAllBy();
-
-    void deleteByEmail(String email);
 
     void deleteById(Integer id);
 

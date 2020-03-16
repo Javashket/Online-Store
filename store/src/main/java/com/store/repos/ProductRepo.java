@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface ProductRepo extends CrudRepository <Product,Long> {
+public interface ProductRepo extends CrudRepository<Product, Long> {
 
     Page<Product> findByTypeAndSeasonAndGender(String type, String season,
-                                               String gender ,Pageable pageable);
+                                               String gender, Pageable pageable);
 
     Page<Product> findByNameIsContaining(String name, Pageable pageable);
 
@@ -21,7 +21,6 @@ public interface ProductRepo extends CrudRepository <Product,Long> {
     void deleteById(Integer id);
 
     Product findById(Integer id);
-
 
 
 }

@@ -11,7 +11,7 @@ import java.util.Set;
 @Transactional
 public interface ListDesiresRepo extends CrudRepository<ListDesires, Long> {
 
-    ListDesires findById( Integer id);
+    ListDesires findById(Integer id);
 
     Set<ListDesires> findAllBy();
 

@@ -5,7 +5,9 @@ import com.store.model.Product;
 import com.store.model.User;
 import com.store.repos.ListDesiresRepo;
 import com.store.repos.ProductRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.Value;
+import lombok.experimental.NonFinal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,23 +15,25 @@ import java.util.Set;
 
 @Service
 @Transactional
+@AllArgsConstructor
+@Value
+@NonFinal
 public class ListDesireService {
 
-    @Autowired
-    private ProductRepo productRepo;
+    ProductRepo productRepo;
 
-    @Autowired
-    private ListDesiresRepo listDesiresRepo;
+    ListDesiresRepo listDesiresRepo;
 
     public void addProduct(User user, Integer id) {
         Set<Product> productsInListDesires = listDesiresRepo.findById(user.getListDesires().getId()).getProducts();
         boolean contain_result = true;
-        for(Product p : productsInListDesires) {
-            if(p.getId().equals(id)) {
+        for (Product p : productsInListDesires) {
+            if (p.getId().equals(id)) {
                 contain_result = false;
+                break;
             }
         }
-        if(contain_result) {
+        if (contain_result) {
             ListDesires listDesires = listDesiresRepo.findById(user.getListDesires().getId());
             Product product = productRepo.findById(id);
             product.addListDesires(listDesires);
@@ -52,7 +56,7 @@ public class ListDesireService {
         }
     }
 
-    public ListDesires findById( Integer id) {
+    public ListDesires findById(Integer id) {
         return listDesiresRepo.findById(id);
     }
 }
