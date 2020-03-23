@@ -1,4 +1,4 @@
-<#ftl output_format="HTML">
+﻿<#ftl output_format="HTML">
 <#import "../parts/pager.ftl" as p>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +7,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/customer/search.css">
     <script src="js/jquery-3.3.1.min.js"></script>
     <link rel="shortcut icon" href="/img/shirt.png" type="image/png">

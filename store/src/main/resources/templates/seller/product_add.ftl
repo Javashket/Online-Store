@@ -1,4 +1,4 @@
-<#ftl output_format="HTML">
+﻿<#ftl output_format="HTML">
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,7 +7,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/seller/product_add.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="shortcut icon" href="/img/shirt.png" type="image/png">
     <title>Добавление товара</title>
 </head>
